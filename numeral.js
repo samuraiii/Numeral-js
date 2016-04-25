@@ -201,10 +201,47 @@
     }
 
     function formatTime (n) {
-        var hours = Math.floor(n._value/60/60),
-            minutes = Math.floor((n._value - (hours * 60 * 60))/60),
-            seconds = Math.round(n._value - (hours * 60 * 60) - (minutes * 60));
-        return hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+        var oneyear = (60 * 60 * 24 * 365), 
+            onemonth = (60 * 60 * 24 * 30),
+            oneweek = (60 * 60 * 24 * 7),
+            oneday = (60 * 60 * 24),
+            onehour = (60 * 60);
+        if ((format.indexOf('y') > -1)||(format.indexOf('Y') > -1)) {
+            var years   = Math.floor(n._value/oneyear),
+                months  = Math.floor((n._value - (years * oneyear))/onemonth),
+                weeks   = Math.floor((n._value - ((years * oneyear) + (months * onemonth)))/oneweek),
+                days    = Math.floor((n._value - ((years * oneyear) + (months * onemonth) + (weeks * oneweek)))/oneday),
+                hours   = Math.floor((n._value - ((years * oneyear) + (months * onemonth) + (weeks * oneweek) + (days * oneday)))/onehour),
+                minutes = Math.floor((n._value - ((years * oneyear) + (months * onemonth) + (weeks * oneweek) + (days * oneday) + (hours * onehour)))/60),
+                seconds = Math.round(n._value - ((years * oneyear) + (months * onemonth) + (weeks * oneweek) + (days * oneday) + (hours * onehour) + (minutes * 60)));
+            return years + 'y' + months + 'm' + weeks + 'w' + days + 'd' + hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+        } else if ((format.indexOf('m') > -1)||(format.indexOf('M') > -1)) {
+            var months  = Math.floor(n._value/onemonth),
+                weeks   = Math.floor((n._value - (months * onemonth))/oneweek),
+                days    = Math.floor((n._value - ((months * onemonth) + (weeks * oneweek)))/oneday),
+                hours   = Math.floor((n._value - ((months * onemonth) + (weeks * oneweek) + (days * oneday)))/onehour),
+                minutes = Math.floor((n._value - ((months * onemonth) + (weeks * oneweek) + (days * oneday) + (hours * onehour)))/60),
+                seconds = Math.round(n._value - ((months * onemonth) + (weeks * oneweek) + (days * oneday) + (hours * onehour) + (minutes * 60)));
+            return months + 'm' + weeks + 'w' + days + 'd' + hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+        } else if ((format.indexOf('w') > -1)||(format.indexOf('W') > -1)) {
+            var weeks   = Math.floor(n._value/oneweek),
+                days    = Math.floor((n._value - (weeks * oneweek))/oneday),
+                hours   = Math.floor((n._value - ((weeks * oneweek) + (days * oneday)))/onehour),
+                minutes = Math.floor((n._value - ((weeks * oneweek) + (days * oneday) + (hours * onehour)))/60),
+                seconds = Math.round(n._value - ((weeks * oneweek) + (days * oneday) + (hours * onehour) + (minutes * 60)));
+            return weeks + 'w' + days + 'd' + hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+        } else if ((format.indexOf('d') > -1)||(format.indexOf('D') > -1)) {
+            var days    = Math.floor(n._value/oneday),
+                hours   = Math.floor((n._value - (days * oneday))/onehour),
+                minutes = Math.floor((n._value - ((days * oneday) + (hours * onehour)))/60),
+                seconds = Math.round(n._value - ((days * oneday) + (hours * onehour) + (minutes * 60)));            
+            return days + 'd' + hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+        } else {
+            var hours = Math.floor(n._value/60/60),
+                minutes = Math.floor((n._value - (hours * 60 * 60))/60),
+                seconds = Math.round(n._value - (hours * 60 * 60) - (minutes * 60));
+            return hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+        }
     }
 
     function unformatTime (string) {
